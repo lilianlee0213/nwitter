@@ -9,6 +9,7 @@ const Auth = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [newAccount, setNewAccount] = useState(true);
+	const [error, setError] = useState('');
 	const onChange = (event) => {
 		const {
 			target: {name, value},
@@ -44,7 +45,7 @@ const Auth = () => {
 			}
 			console.log('User:', user);
 		} catch (error) {
-			console.log('Error:', error.message);
+			setError(error.message);
 		}
 	};
 
@@ -59,6 +60,7 @@ const Auth = () => {
 					value={email}
 					onChange={onChange}
 				/>
+				{error}
 				<input
 					type="password"
 					name="password"
