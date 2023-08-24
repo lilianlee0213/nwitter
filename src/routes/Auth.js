@@ -1,4 +1,9 @@
 import React, {useState} from 'react';
+import {authService} from 'fbase';
+import {
+	createUserWithEmailAndPassword,
+	signInWithEmailAndPassword,
+} from 'firebase/auth';
 
 const Auth = () => {
 	const [email, setEmail] = useState('');
@@ -16,14 +21,33 @@ const Auth = () => {
 			setPassword(value);
 		}
 	};
-	const onSubmit = (event) => {
+	const onSubmit = async (event) => {
 		event.preventDefault();
-		if (newAccount) {
-			//create Account
-		} else {
-			//log in
+		let user;
+		try {
+			if (newAccount) {
+				const userCredential = await createUserWithEmailAndPassword(
+					authService,
+					email,
+					password
+				);
+				user = userCredential.user;
+				// Account created
+			} else {
+				const userCredential = await signInWithEmailAndPassword(
+					authService,
+					email,
+					password
+				);
+				user = userCredential.user;
+				// User logged in
+			}
+			console.log('User:', user);
+		} catch (error) {
+			console.log('Error:', error.message);
 		}
 	};
+
 	return (
 		<div>
 			<form onSubmit={onSubmit}>
@@ -38,7 +62,7 @@ const Auth = () => {
 				<input
 					type="password"
 					name="password"
-					placeholder="Passwrod"
+					placeholder="Password"
 					required
 					value={password}
 					onChange={onChange}
