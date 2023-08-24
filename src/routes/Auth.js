@@ -4,7 +4,16 @@ const Auth = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const onChange = (event) => {
-		console.log(event.target.name);
+		const {
+			target: {name, value},
+		} = event;
+		//change value of email and password when onChange
+		//this will enable to write in input
+		if (name === 'email') {
+			setEmail(value);
+		} else if (name === 'password') {
+			setPassword(value);
+		}
 	};
 	const onSubmit = (event) => {
 		event.preventDefault();
