@@ -1,8 +1,11 @@
 import React, {useState} from 'react';
 import {authService} from 'fbase';
 import {
+	GithubAuthProvider,
+	GoogleAuthProvider,
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
+	signInWithPopup,
 } from 'firebase/auth';
 
 const Auth = () => {
@@ -49,14 +52,25 @@ const Auth = () => {
 		}
 	};
 	const toggleAccount = () => setNewAccount((prev) => !prev);
-	const onSocialClick = (event) => {
+	const onSocialClick = async (event) => {
 		const {
 			target: {name},
 		} = event;
+		let provider;
 		if (name === 'google') {
-			//google provider
+			// Create Google provider
+			provider = new GoogleAuthProvider();
 		} else if (name === 'github') {
-			//github provider
+			// Create GitHub provider
+			provider = new GithubAuthProvider();
+		}
+		try {
+			const result = await signInWithPopup(authService, provider);
+			const user = result.user;
+			console.log(result);
+			console.log('User:', user);
+		} catch (error) {
+			setError(error.message);
 		}
 	};
 	return (
