@@ -9,10 +9,10 @@ const Home = () => {
 		const dbNweets = await getDocs(collection(dbService, 'nweets'));
 		dbNweets.forEach((doc) => {
 			const nweetObj = {
-				...doc.data(),
 				id: doc.id,
+				...doc.data(),
 			};
-			setNweets((prev) => [[nweetObj, ...prev]]);
+			setNweets((prev) => [nweetObj, ...prev]);
 		});
 	};
 	useEffect(() => {
@@ -49,6 +49,11 @@ const Home = () => {
 				/>
 				<input type="submit" value="Nweet" />
 			</form>
+			<div>
+				{nweets.map((item) => (
+					<h4 key={item.id}>{item.nweet}</h4>
+				))}
+			</div>
 		</div>
 	);
 };
