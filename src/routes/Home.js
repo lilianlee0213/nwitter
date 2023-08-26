@@ -51,6 +51,9 @@ const Home = ({userObj}) => {
 		};
 		reader.readAsDataURL(nweetFile);
 	};
+	const onClearAttachmentClick = () => {
+		setAttachment(null);
+	};
 	return (
 		<div>
 			<form onSubmit={onSubmit}>
@@ -66,6 +69,7 @@ const Home = ({userObj}) => {
 				{attachment && (
 					<div>
 						<img src={attachment} width={50} height={50} alt="attachment" />
+						<button onClick={onClearAttachmentClick}>Clear Photo</button>
 					</div>
 				)}
 			</form>
