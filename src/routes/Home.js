@@ -1,6 +1,8 @@
 import Nweet from 'components/Nweet';
-import {dbService} from 'fbase';
-import {addDoc, collection, doc, getDocs, onSnapshot} from 'firebase/firestore';
+import {dbService, storageService} from 'fbase';
+import {addDoc, collection, onSnapshot} from 'firebase/firestore';
+import {ref, uploadString, getDownloadURL} from 'firebase/storage';
+import {v4 as uuidv4} from 'uuid';
 import React, {useEffect, useState} from 'react';
 
 const Home = ({userObj}) => {
@@ -20,16 +22,24 @@ const Home = ({userObj}) => {
 	}, []);
 	const onSubmit = async (event) => {
 		event.preventDefault();
-		try {
-			await addDoc(collection(dbService, 'nweets'), {
-				text: nweet,
-				createdAt: Date.now(),
-				creatorId: userObj.uid,
-			});
-			setNweet('');
-		} catch (e) {
-			console.log(e);
-		}
+		// Create a child reference
+		const attachmentRef = ref(storageService, `${userObj.uid}/${uuidv4()}`);
+		// Upload the attachment using the uploadString function
+		await uploadString(attachmentRef, attachment, 'data_url');
+		// Get the download URL of the uploaded attachment
+		const attachmentUrl = await getDownloadURL(attachmentRef);
+		// Construct the nweet object with relevant information
+		const nweetObj = {
+			text: nweet,
+			createdAt: Date.now(),
+			creatorId: userObj.uid,
+			attachmentUrl,
+		};
+		// Add the nweet object to the Firestore collection
+		await addDoc(collection(dbService, 'nweets'), nweetObj);
+		// Clear the input fields after successful submission
+		setNweet('');
+		setAttachment('');
 	};
 	const onChange = (event) => {
 		const {
