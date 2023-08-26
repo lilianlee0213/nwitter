@@ -6,6 +6,7 @@ import React, {useEffect, useState} from 'react';
 const Home = ({userObj}) => {
 	const [nweet, setNweet] = useState('');
 	const [nweets, setNweets] = useState([]);
+	const [attachment, setAttachment] = useState();
 	useEffect(() => {
 		//#02 another way (to get as in real time)
 		//be listening any operation(CRUD) on database --REAL TIME
@@ -41,13 +42,13 @@ const Home = ({userObj}) => {
 			target: {files},
 		} = event;
 		const nweetFile = files[0];
-		// FileReader API
 		const reader = new FileReader();
-		//event listenr to the fileReader
 		reader.onloadend = (fininshedEvent) => {
-			console.log(fininshedEvent);
+			const {
+				currentTarget: {result},
+			} = fininshedEvent;
+			setAttachment(result);
 		};
-		//turn the file into text form(read data as url)
 		reader.readAsDataURL(nweetFile);
 	};
 	return (
@@ -62,6 +63,11 @@ const Home = ({userObj}) => {
 				/>
 				<input type="file" accept="image/*" onChange={onFileChange} />
 				<input type="submit" value="Nweet" />
+				{attachment && (
+					<div>
+						<img src={attachment} width={50} height={50} alt="attachment" />
+					</div>
+				)}
 			</form>
 			<div>
 				{nweets.map((nweet) => (
