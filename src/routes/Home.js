@@ -7,7 +7,13 @@ const Home = () => {
 	const [nweets, setNweets] = useState([]);
 	const getNweets = async () => {
 		const dbNweets = await getDocs(collection(dbService, 'nweets'));
-		dbNweets.forEach((doc) => setNweets((prev) => [doc.data(), ...prev]));
+		dbNweets.forEach((doc) => {
+			const nweetObj = {
+				...doc.data(),
+				id: doc.id,
+			};
+			setNweets((prev) => [[nweetObj, ...prev]]);
+		});
 	};
 	useEffect(() => {
 		getNweets();
