@@ -18,7 +18,7 @@ function App() {
 			setInit(true);
 		});
 	}, []);
-	console.log(authService.currentUser); //null
+	// console.log(authService.currentUser); --> null
 	return (
 		<>{init ? <AppRouter isLoggedIn={isLoggedIn} /> : 'Initializing...'}</>
 	);
