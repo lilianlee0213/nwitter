@@ -1,3 +1,4 @@
+import Nweet from 'components/Nweet';
 import {dbService} from 'fbase';
 import {addDoc, collection, doc, getDocs, onSnapshot} from 'firebase/firestore';
 import React, {useEffect, useState} from 'react';
@@ -48,8 +49,8 @@ const Home = ({userObj}) => {
 				<input type="submit" value="Nweet" />
 			</form>
 			<div>
-				{nweets.map((item) => (
-					<h4 key={item.id}>{item.text}</h4>
+				{nweets.map((nweet) => (
+					<Nweet key={nweet.id} nweetObj={nweet} />
 				))}
 			</div>
 		</div>
