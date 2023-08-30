@@ -1,5 +1,5 @@
 import {authService, dbService} from 'fbase';
-import {collection, orderBy, query, where} from 'firebase/firestore';
+import {collection, getDocs, orderBy, query, where} from 'firebase/firestore';
 import React, {useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
 
@@ -16,6 +16,11 @@ const Profile = ({userObj}) => {
 			where('creatorId', '==', userObj.uid),
 			orderBy('createdAt', 'desc')
 		);
+		const querySnapshot = await getDocs(q);
+		querySnapshot.forEach((doc) => {
+			// doc.data() is never undefined for query doc snapshots
+			console.log(doc.id, ' => ', doc.data());
+		});
 	};
 	useEffect(() => {
 		getMyNweets();
