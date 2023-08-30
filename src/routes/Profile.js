@@ -4,7 +4,7 @@ import {collection, getDocs, orderBy, query, where} from 'firebase/firestore';
 import React, {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 
-const Profile = ({userObj}) => {
+const Profile = ({userObj, refreshUser}) => {
 	const redirectHome = useNavigate();
 	const [newDisplayName, setDisplayName] = useState(userObj.displayName);
 	const onLogOutClick = () => {
@@ -38,6 +38,7 @@ const Profile = ({userObj}) => {
 		if (userObj.displayName !== newDisplayName) {
 			//update profile
 			await updateProfile(userObj, {displayName: newDisplayName});
+			refreshUser();
 		}
 	};
 	return (

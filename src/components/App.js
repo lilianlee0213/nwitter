@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import AppRouter from 'components/AppRouter';
 import {authService} from 'fbase';
-import {onAuthStateChanged} from 'firebase/auth';
+import {onAuthStateChanged, updateCurrentUser} from 'firebase/auth';
 
 function App() {
 	const [init, setInit] = useState(false);
@@ -20,11 +20,18 @@ function App() {
 			setInit(true);
 		});
 	}, []);
-	// console.log(authService.currentUser); --> null
+	const refreshUser = async () => {
+		await updateCurrentUser(authService, authService.currentUser);
+		setUserObj(authService.currentUser);
+	};
 	return (
 		<>
 			{init ? (
-				<AppRouter isLoggedIn={isLoggedIn} userObj={userObj} />
+				<AppRouter
+					isLoggedIn={isLoggedIn}
+					userObj={userObj}
+					refreshUser={refreshUser}
+				/>
 			) : (
 				'Initializing...'
 			)}
