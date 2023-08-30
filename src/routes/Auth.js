@@ -22,10 +22,7 @@ const Auth = () => {
 			provider = new GithubAuthProvider();
 		}
 		try {
-			const result = await signInWithPopup(authService, provider);
-			const user = result.user;
-			console.log(result);
-			console.log('User:', user);
+			await signInWithPopup(authService, provider);
 		} catch (error) {
 			setError(error.message);
 		}
