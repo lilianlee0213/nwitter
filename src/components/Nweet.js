@@ -36,7 +36,7 @@ const Nweet = ({nweetObj, isOwner}) => {
 		setEditing(false);
 	};
 	return (
-		<div>
+		<div className="nweet">
 			{editing ? (
 				<>
 					<form onSubmit={editOnSubmit} className="container nweetEdit">
