@@ -1,3 +1,5 @@
+import {faPencilAlt, faTrash} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {dbService, storageService} from 'fbase';
 import {deleteDoc, doc, updateDoc} from 'firebase/firestore';
 import {deleteObject, ref} from 'firebase/storage';
@@ -37,17 +39,20 @@ const Nweet = ({nweetObj, isOwner}) => {
 		<div>
 			{editing ? (
 				<>
-					<form onSubmit={editOnSubmit}>
+					<form onSubmit={editOnSubmit} className="container nweetEdit">
 						<input
 							type="text"
 							placeholder="Edit your nweet"
 							value={newNweet}
 							required
 							onChange={editOnChange}
+							className="formInput"
 						/>
-						<input type="submit" value="Update Nweet" />
+						<input type="submit" value="Update Nweet" className="formBtn" />
 					</form>
-					<button onClick={toggleEditing}>Cancel</button>
+					<span onClick={toggleEditing} className="formBtn cancelBtn">
+						Cancel
+					</span>
 				</>
 			) : (
 				<>
@@ -56,10 +61,14 @@ const Nweet = ({nweetObj, isOwner}) => {
 						<img src={nweetObj.attachmentUrl} width={50} height={50} />
 					)}
 					{isOwner && (
-						<>
-							<button onClick={onDeleteClick}>Delete</button>
-							<button onClick={toggleEditing}>Edit</button>
-						</>
+						<div className="nweet__actions">
+							<span onClick={onDeleteClick}>
+								<FontAwesomeIcon icon={faTrash} />
+							</span>
+							<span onClick={toggleEditing}>
+								<FontAwesomeIcon icon={faPencilAlt} />
+							</span>
+						</div>
 					)}
 				</>
 			)}
