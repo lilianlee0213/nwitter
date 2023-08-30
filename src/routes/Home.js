@@ -1,14 +1,11 @@
 import Nweet from 'components/Nweet';
-import {dbService, storageService} from 'fbase';
-import {addDoc, collection, onSnapshot} from 'firebase/firestore';
-import {ref, uploadString, getDownloadURL} from 'firebase/storage';
-import {v4 as uuidv4} from 'uuid';
+import {dbService} from 'fbase';
+import {collection, onSnapshot} from 'firebase/firestore';
 import React, {useEffect, useState} from 'react';
+import NweetFactory from 'components/NweetFactory';
 
 const Home = ({userObj}) => {
-	const [nweet, setNweet] = useState('');
 	const [nweets, setNweets] = useState([]);
-	const [attachment, setAttachment] = useState();
 	useEffect(() => {
 		//#02 another way (to get as in real time)
 		//be listening any operation(CRUD) on database --REAL TIME
@@ -20,66 +17,10 @@ const Home = ({userObj}) => {
 			setNweets(nweetArray);
 		});
 	}, []);
-	const onSubmit = async (event) => {
-		event.preventDefault();
-		let attachmentUrl = '';
-		if (attachment) {
-			const attachmentRef = ref(storageService, `${userObj.uid}/${uuidv4()}`);
-			await uploadString(attachmentRef, attachment, 'data_url');
-			attachmentUrl = await getDownloadURL(attachmentRef);
-		}
-		const nweetObj = {
-			text: nweet,
-			createdAt: Date.now(),
-			creatorId: userObj.uid,
-			attachmentUrl,
-		};
-		await addDoc(collection(dbService, 'nweets'), nweetObj);
-		setNweet('');
-		setAttachment('');
-	};
-	const onChange = (event) => {
-		const {
-			target: {value},
-		} = event;
-		setNweet(value);
-	};
-	const onFileChange = (event) => {
-		const {
-			target: {files},
-		} = event;
-		const nweetFile = files[0];
-		const reader = new FileReader();
-		reader.onloadend = (fininshedEvent) => {
-			const {
-				currentTarget: {result},
-			} = fininshedEvent;
-			setAttachment(result);
-		};
-		reader.readAsDataURL(nweetFile);
-	};
-	const onClearAttachmentClick = () => {
-		setAttachment(null);
-	};
+
 	return (
 		<div>
-			<form onSubmit={onSubmit}>
-				<input
-					type="text"
-					placeholder="What's on your mind?"
-					maxLength={120}
-					onChange={onChange}
-					value={nweet}
-				/>
-				<input type="file" accept="image/*" onChange={onFileChange} />
-				<input type="submit" value="Nweet" />
-				{attachment && (
-					<div>
-						<img src={attachment} width={50} height={50} alt="attachment" />
-						<button onClick={onClearAttachmentClick}>Clear Photo</button>
-					</div>
-				)}
-			</form>
+			<NweetFactory userObj={userObj} />
 			<div>
 				{nweets.map((nweet) => (
 					<Nweet
