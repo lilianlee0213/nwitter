@@ -13,7 +13,9 @@ const Nweet = ({nweetObj, isOwner}) => {
 		if (ok) {
 			//delete nweet & attachment
 			await deleteDoc(nweetDocRef);
-			await deleteObject(attachmentUrlRef);
+			if (nweetObj.attachmentUrl) {
+				await deleteObject(attachmentUrlRef);
+			}
 		}
 	};
 	const toggleEditing = () => {
